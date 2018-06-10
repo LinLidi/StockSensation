@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>图表</title>
+    <!-- 引入 ECharts 文件 -->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="../static/js/stockdata/echarts.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width:100%;height:750px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var allCount = {{allCount|safe}};
+        console.log(allCount[125][0])
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        var posList = [
+            'left', 'right', 'top', 'bottom',
+            'inside',
+            'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+            'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+        ];
+
+
+        option = {
+            color: ['#003366', '#006699', '#4cabce', '#e5323e'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+            },
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                left: 'right',
+                top: 'center',
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {show: false},
+                    data: ['5月1日', '5月2日', '5月3日', '5月4日', '5月5日']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '中等立场',
+                    type: 'bar',
+                    barGap: 0,
+                    data: [allCount[126][2],allCount[127][2],allCount[128][2],allCount[129][2],allCount[130][2]]
+                },
+                {
+                    name: '积极情绪',
+                    type: 'bar',
+                    data: [allCount[126][3],allCount[127][3],allCount[128][3],allCount[129][3],allCount[130][3]]
+                },
+                {
+                    name: '消极情绪',
+                    type: 'bar',
+                    data: [allCount[126][4],allCount[127][4],allCount[128][4],allCount[129][4],allCount[130][4]]
+                },
+                {
+                    name: '发帖总数',
+                    type: 'bar',
+                    data: [allCount[126][5],allCount[127][5],allCount[128][5],allCount[129][5],allCount[130][5]]
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
