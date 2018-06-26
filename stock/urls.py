@@ -23,8 +23,8 @@ from stockdata import views as stockdata_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^echarts/$', stockdata_views.index, name='index'),
     url(r'^$', stockdata_views.home, name='home'),
+    url(r'^echarts/$', stockdata_views.index, name='index'),
     url(r'^basedic/$', stockdata_views.basedicf, name='basedic'),
     url(r'^basedicgraph/$', stockdata_views.basedic, name='basedicgraph'),
     url(r'^stockgraph/$', stockdata_views.stockgraph, name='stockgraph'),
