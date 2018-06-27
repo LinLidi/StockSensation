@@ -35,20 +35,17 @@
       </div>
     </nav>
 
-<div class="container">
-<div class="panel panel-info">
-  <div class="panel-heading">k线图</div>
-  <div class="panel-body">
-               <div class="col-md-12 col-xs-12">
-                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-                <div id="main" style="width:100%;height:400px;"></div>
-            </div>
-  </div>
-</div>
-</div>
-  
-
-
+    <div class="container">
+        <div class="panel panel-info">
+              <div class="panel-heading">K线图</div>
+                    <div class="panel-body">
+                        <div class="col-md-12 col-xs-12">
+                            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                        <div id="main" style="width:100%;height:400px;"></div>
+                    </div>
+              </div>
+        </div>
+    </div>
   
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main'));
@@ -64,7 +61,6 @@
         var dataMA20t = {{dataMA20|safe}}
         var stockname = {{stockname|safe}};
 
-        
         var date = datet.reverse();
         var open = opent.reverse();
         var close = closet.reverse();

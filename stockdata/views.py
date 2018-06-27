@@ -45,6 +45,31 @@ def home(request):
 	dataMA20 = dataMA20.tolist()
 	return render(request,'home.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stockname':json.dumps(stockname)})
 
+def stockKLine(request):
+	stocknum = request.GET['stocknum']
+	tf = ts.get_hist_data(stocknum)
+	df = ts.get_realtime_quotes(stocknum)
+	df = df.to_dict('record')
+	stockname = df[0]['name']
+	date = tf.index.tolist()
+	open = tf['open']
+	open = open.tolist()
+	close = tf['close']
+	close = close.tolist()
+	high = tf['high']
+	high = high.tolist()
+	low = tf['low']
+	low = low.tolist()
+	volume = tf['volume']
+	volume = volume.tolist()
+	dataMA5 = tf['ma5']
+	dataMA5 = dataMA5.tolist()
+	dataMA10 = tf['ma10']
+	dataMA10 = dataMA10.tolist()
+	dataMA20 = tf['ma20']
+	dataMA20 = dataMA20.tolist()
+	return render(request,'stockKline.html',{'stockname':json.dumps(stockname),'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20)})
+
 def wordcloud(request):
 	return render(request,"wordcloud.html")
 
@@ -64,8 +89,6 @@ def index(request):
 def basedicf(request):
 	return render(request,"basedic.html")
 
-
-
 def nbopinionResult(request):
 	stocknum = request.GET['stocknum']
 	url = 'http://guba.eastmoney.com/list,'+str(stocknum)+',f.html'
@@ -78,9 +101,6 @@ def nbopinionResult(request):
 		pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
 		items = re.findall(pattern,content)
 	return render(request,"nbopinionResult.html")
-
-
-
 
 def basedic(request):
 	fpge = request.GET['fpge']
@@ -151,29 +171,6 @@ def stocksearch(request):
 				stonum =1
 	return(request,'sss.html')
 
-def stockgraph(request):
-	stocknum = request.GET['stocknum']
-	tf = ts.get_hist_data(stocknum)
-	df = ts.get_realtime_quotes(stocknum)
-	df = df.to_dict('record')
-	stockname = df[0]['name']
-	date = tf.index.tolist()
-	open = tf['open']
-	open = open.tolist()
-	close = tf['close']
-	close = close.tolist()
-	high = tf['high']
-	high = high.tolist()
-	low = tf['low']
-	low = low.tolist()
-	volume = tf['volume']
-	volume = volume.tolist()
-	dataMA5 = tf['ma5']
-	dataMA5 = dataMA5.tolist()
-	dataMA10 = tf['ma10']
-	dataMA10 = dataMA10.tolist()
-	dataMA20 = tf['ma20']
-	dataMA20 = dataMA20.tolist()
-	return render(request,'stockgraph.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stockname':json.dumps(stockname)})
+
 
 

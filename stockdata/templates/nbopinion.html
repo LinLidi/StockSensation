@@ -35,7 +35,7 @@
     </nav>
 
     <div class="container"> 
-      <h4 class="text-primary">朴素贝叶斯情感分析</h4>
+        <h3 class="text-primary text-center">朴素贝叶斯情感分析</h3>
     </div>
  
     <div class="container">
@@ -53,3 +53,97 @@
         </div>
       </div>
     </div>
+
+    <div class="container"> 
+      <h5 class="text-primary">当前朴素贝叶斯模型的准确率为：0.882933076</h5>
+    </div>
+
+    <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">平安银行——基于情感字典舆情分析</div>
+      <div class="panel-body">
+                   <div class="col-md-12 col-xs-12">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div id="main" style="width:100%;height:400px;"></div>
+                </div>
+      </div>
+    </div>
+    </div>
+
+
+       <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 基于准备好的dom，初始化echarts实例
+        var posList = [
+    'left', 'right', 'top', 'bottom',
+    'inside',
+    'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+    'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+];
+
+        option = {
+            color: ['#191970', '#3fbf2b', '#e5323e', '#c0c0c0'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+            },
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                left: 'right',
+                top: 'center',
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {show: false},
+                    data: ['5月1日', '5月2日', '5月3日', '5月4日', '5月5日']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '中等立场',
+                    type: 'bar',
+                    barGap: 0,
+                    data: [46,79,65,39,76]
+                },
+                {
+                    name: '积极情绪',
+                    type: 'bar',
+                    data: [108,98,79,117,96]
+                },
+                {
+                    name: '消极情绪',
+                    type: 'bar',
+                    data: [47,20,39,89,28]
+                },
+                {
+                    name: '发帖总数',
+                    type: 'bar',
+                    data: [387,399,368,354,308]
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表
+        myChart.setOption(option);
+    </script>
+</body>
+</html>

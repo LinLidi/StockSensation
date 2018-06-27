@@ -35,7 +35,7 @@
     </nav>
 
     <div class="container"> 
-      <h4 class="text-primary">个股词云图</h4>
+      <h3 class="text-primary text-center">个股词云图</h3>
     </div>
  
     <div class="container">
@@ -53,3 +53,101 @@
         </div>
       </div>
     </div>
+
+    <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">股票词云</div>
+      <div class="panel-body">
+                   <div class="col-md-12 col-xs-12">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div id="main" style="width:100%;height:400px;"></div>
+                </div>
+      </div>
+    </div>
+    </div>
+
+        <div class="container">
+        <div class="col-md-12 col-xs-12">
+            <a href="/" class="btn btn-default btn-block" role="button">返回首页</a>
+        </div>
+    </div>
+
+ <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 基于准备好的dom，初始化echarts实例
+    var option = {
+    title:{
+        text:"小米",
+        link:'https://github.com/ecomfe/echarts-wordcloud',
+        subtext: '近期热点词汇',
+        sublink:'http://data-visual.cn',
+    },
+    tooltip: {},
+    series: [{
+        type: 'wordCloud',
+        gridSize: 20,
+        sizeRange: [12, 50],
+        rotationRange: [0, 0],
+        shape: 'circle',
+        textStyle: {
+            normal: {
+                color: function() {
+                    return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')';
+                }
+            },
+            emphasis: {
+                shadowBlur: 10,
+                shadowColor: '#333'
+            }
+        },
+        data: [{
+            name: '小米',
+            value: 10000,
+            textStyle: {
+                normal: {
+                    color: 'black'
+                },
+                emphasis: {
+                    color: 'red'
+                }
+            }
+        }, {
+            name: '富士康',
+            value: 6181
+        }, {
+            name: 'CDR',
+            value: 4386
+        }, {
+            name: '赴港',
+            value: 4055
+        }, {
+            name: '上市',
+            value: 2467
+        }, {
+            name: '过会',
+            value: 2244
+        }, {
+            name: '康德',
+            value: 1898
+        }, {
+            name: 'IPO',
+            value: 1484
+        }, {
+            name: '爱奇艺',
+            value: 1112
+        }]
+    }]
+};
+        myChart.setOption(option);
+        window.onresize = function () {
+            myChart.resize(); //使第一个图表适应
+        }
+    </script>
+
+    
+</body>
+</html>

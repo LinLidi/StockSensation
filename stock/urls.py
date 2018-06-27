@@ -31,5 +31,5 @@ urlpatterns = [
     url(r'^echarts/$', stockdata_views.index, name='index'),
     url(r'^basedic/$', stockdata_views.basedicf, name='basedic'),
     url(r'^basedicgraph/$', stockdata_views.basedic, name='basedicgraph'),
-    url(r'^stockgraph/$', stockdata_views.stockgraph, name='stockgraph'),
+    url(r'^stockKLine/$', stockdata_views.stockKLine, name='stockKline'),
 ]
