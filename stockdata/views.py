@@ -45,6 +45,15 @@ def home(request):
 	dataMA20 = dataMA20.tolist()
 	return render(request,'home.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stockname':json.dumps(stockname)})
 
+def wordcloud(request):
+	return render(request,"wordcloud.html")
+
+def dicopinion(request):
+	return render(request,"dicopinion.html")
+
+def nbopinion(request):
+	return render(request,"nbopinion.html")
+
 def index(request):
 	a = request.GET['intext']
 	a = str(a)
@@ -55,10 +64,9 @@ def index(request):
 def basedicf(request):
 	return render(request,"basedic.html")
 
-def wordcloud(request):
-	return render(request,"wordcloud.html")
 
-def nbopinion(request):
+
+def nbopinionResult(request):
 	stocknum = request.GET['stocknum']
 	url = 'http://guba.eastmoney.com/list,'+str(stocknum)+',f.html'
 	today = datetime.datetime.now()
@@ -69,10 +77,9 @@ def nbopinion(request):
 		content = str(requesturl.read(),'utf-8')
 		pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
 		items = re.findall(pattern,content)
-	return render(request,"nbopinion.html")
+	return render(request,"nbopinionResult.html")
 
-def dicopinion(request):
-	return render(request,"dicopinion.html")
+
 
 
 def basedic(request):
