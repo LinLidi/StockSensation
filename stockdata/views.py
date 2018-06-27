@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import math
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from stockdata.models import BlogsPost
 from django.http import HttpResponse
 from django.template import loader
 import urllib.request
