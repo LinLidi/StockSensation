@@ -73,18 +73,18 @@ def stockKLine(request):
 def wordcloud(request):
 	return render(request,"wordcloud.html")
 
-def dicopinion(request):
-	return render(request,"dicopinion.html")
-
-def nbopinion(request):
-	return render(request,"nbopinion.html")
-
 def index(request):
 	a = request.GET['intext']
 	a = str(a)
 	model = gensim.models.word2vec.Word2Vec.load("segwords.model")
 	items = model.most_similar(a,topn=10) #找出最近n各单词
 	return render(request, 'echarts.html', {'items': json.dumps(items)})
+
+def dicopinion(request):
+	return render(request,"dicopinion.html")
+
+def nbopinion(request):
+	return render(request,"nbopinion.html")
 
 def basedicf(request):
 	return render(request,"basedic.html")
