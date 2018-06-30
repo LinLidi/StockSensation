@@ -73,12 +73,8 @@ def stockKLine(request):
 def wordcloud(request):
 	return render(request,"wordcloud.html")
 
-def index(request):
-	a = request.GET['intext']
-	a = str(a)
-	model = gensim.models.word2vec.Word2Vec.load("segwords.model")
-	items = model.most_similar(a,topn=10) #找出最近n各单词
-	return render(request, 'echarts.html', {'items': json.dumps(items)})
+def wordcloudResult(request):
+	return render(request,"wordcloudResult.html")
 
 def dicopinion(request):
 	return render(request,"dicopinion.html")
@@ -120,9 +116,6 @@ def dicopinionResult(request):
 def nbopinion(request):
 	return render(request,"nbopinion.html")
 
-def basedicf(request):
-	return render(request,"basedic.html")
-
 def nbopinionResult(request):
 	stocknum = request.GET['stocknum']
 	url = 'http://guba.eastmoney.com/list,'+str(stocknum)+',f.html'
@@ -135,56 +128,6 @@ def nbopinionResult(request):
 		pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
 		items = re.findall(pattern,content)
 	return render(request,"nbopinionResult.html")
-
-def basedic(request):
-	fpge = request.GET['fpge']
-	lpge= request.GET['lpge']
-	fpge = int(fpge)
-	lpge = int(lpge)
-	if fpge < lpge:
-		pass
-	#设置时间空间
-	allCount = [[0 for q in range(6)] for q in range(372)]
-	for monthWide in range(0,12):
-		for day in range(0,31):
-			allCount[day+monthWide*31][0] = monthWide+1
-			allCount[day+monthWide*31][1] = day+1
-	#计算情绪值
-	for page_num in range(fpge, lpge+1):
-		url = 'http://guba.eastmoney.com/list,gssz,f_' + str(page_num) + '.html'
-		request1 = urllib.request.urlopen(url)
-		content = str(request1.read(),'utf-8')
-		pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-		items = re.findall(pattern,content)
-		for date in range(0,372):
-			for i in range(0,len(items)):
-				#找到匹配时间
-				if int(items[i][3]) == allCount[date][0] and int(items[i][4]) == allCount[date][1]:
-					allCount[date][5] += 1
-					#分词
-					item1 = items[i][1]
-					seg_list = list(jieba.cut(item1, cut_all=True))
-					#匹配计数
-					for eachItem in seg_list:
-						if eachItem != ' ':
-							if eachItem in positiveWord:
-								allCount[date][2] += 1
-								continue
-							elif eachItem in negativeWord:
-								allCount[date][3] += 1
-								continue
-							elif eachItem in neutralWord:
-								allCount[date][4] += 1
-	#打印输出，记录不全为0天数
-	nonZero = 0
-	for z in range(0,372):
-		if (allCount[z][2])*(allCount[z][2])+(allCount[z][3])*(allCount[z][3])+(allCount[z][4])*(allCount[z][4])+(allCount[z][5])*(allCount[z][5]) !=0:
-			print(allCount[z][0],"月",allCount[z][1],"日发帖总数：",allCount[z][5],"; 情绪值：[",allCount[z][2],",",allCount[z][3],",",allCount[z][4],"]")
-			nonZero +=1
-	return render(request,'basedicgraph.html',{'allCount':json.dumps(allCount)})
-
-
-
 
 def setDate():
 	dateCount =[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
