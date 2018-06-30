@@ -24,12 +24,16 @@ from stockdata import views as stockdata_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', stockdata_views.home, name='home'),
+    url(r'^stockKLine/$', stockdata_views.stockKLine, name='stockKline'),
+
     url(r'^wordcloud/$', stockdata_views.wordcloud, name='wordcloud'),
+    
     url(r'^dicopinion/$', stockdata_views.dicopinion, name='dicopinion'),
+    url(r'^dicopinionResult/$', stockdata_views.dicopinionResult, name='dicopinionResult'),
+
     url(r'^nbopinion/$', stockdata_views.nbopinion, name='nbopinion'),
 
     url(r'^echarts/$', stockdata_views.index, name='index'),
     url(r'^basedic/$', stockdata_views.basedicf, name='basedic'),
     url(r'^basedicgraph/$', stockdata_views.basedic, name='basedicgraph'),
-    url(r'^stockKLine/$', stockdata_views.stockKLine, name='stockKline'),
 ]
