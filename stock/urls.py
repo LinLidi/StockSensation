@@ -27,13 +27,12 @@ urlpatterns = [
     url(r'^stockKLine/$', stockdata_views.stockKLine, name='stockKline'),
 
     url(r'^wordcloud/$', stockdata_views.wordcloud, name='wordcloud'),
+    url(r'^wordcloudResult/$', stockdata_views.wordcloudResult, name='wordcloudResult'),
     
     url(r'^dicopinion/$', stockdata_views.dicopinion, name='dicopinion'),
     url(r'^dicopinionResult/$', stockdata_views.dicopinionResult, name='dicopinionResult'),
 
     url(r'^nbopinion/$', stockdata_views.nbopinion, name='nbopinion'),
+    url(r'^nbopinionResult/$', stockdata_views.nbopinionResult, name='nbopinionResult'),
 
-    url(r'^echarts/$', stockdata_views.index, name='index'),
-    url(r'^basedic/$', stockdata_views.basedicf, name='basedic'),
-    url(r'^basedicgraph/$', stockdata_views.basedic, name='basedicgraph'),
 ]
