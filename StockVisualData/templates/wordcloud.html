@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8"> 
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, user-scalable=no">
+   <title>股市舆情分析</title>
+   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+   <script src="../static/js/stockdata/echarts.js"></script>
+   <script src="http://data-visual.cn/datav/src/js/echarts/extension/echarts-wordcloud.min.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span> 股市舆情分析</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">个股历史交易行情</a></li>
+            <li class="active"><a href="/wordcloud">个股相关词云展示</a></li>
+            <li><a href="/dicopinion">情感字典舆情预测</a></li>
+            <li><a href="/nbopinion">朴素贝叶斯舆情预测</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container"> 
+      <h3 class="text-primary text-center">个股词云图</h3>
+    </div>
+ 
+    <div class="container">
+      <div class="panel panel-primary">
+        <div class="panel-heading">个股词云查询</div>
+          <div class="panel-body">
+            <p class="lead">输入完整的股票代码，支持字母和数字同时输入</p>
+            <form class="form-inline" action="/stockgraph/" role="form" method="get">
+                <div class="form-group">
+                  <label class="sr-only" for="Inputstock"></label>
+                  <input type="text" class="form-control" name="stocknum" id="gettext3" placeholder="输入股票代码"/>
+                </div>
+                <button type="submit" class="btn btn-primary">查询 <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+            </form>   
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">股票词云实例</div>
+      <div class="panel-body">
+                   <div class="col-md-12 col-xs-12">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div id="main" style="width:100%;height:400px;"></div>
+                </div>
+      </div>
+    </div>
+    </div>
+
+        <div class="container">
+        <div class="col-md-12 col-xs-12">
+            <a href="/" class="btn btn-default btn-block" role="button">返回首页</a>
+        </div>
+    </div>
+
+ <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 基于准备好的dom，初始化echarts实例
+    var option = {
+    title:{
+        text:"小米",
+        link:'https://github.com/ecomfe/echarts-wordcloud',
+        subtext: '近期热点词汇',
+        sublink:'http://data-visual.cn',
+    },
+    tooltip: {},
+    series: [{
+        type: 'wordCloud',
+        gridSize: 20,
+        sizeRange: [12, 50],
+        rotationRange: [0, 0],
+        shape: 'circle',
+        textStyle: {
+            normal: {
+                color: function() {
+                    return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')';
+                }
+            },
+            emphasis: {
+                shadowBlur: 10,
+                shadowColor: '#333'
+            }
+        },
+        data: [{
+            name: '小米',
+            value: 10000,
+            textStyle: {
+                normal: {
+                    color: 'black'
+                },
+                emphasis: {
+                    color: 'red'
+                }
+            }
+        }, {
+            name: '富士康',
+            value: 6181
+        }, {
+            name: 'CDR',
+            value: 4386
+        }, {
+            name: '赴港',
+            value: 4055
+        }, {
+            name: '上市',
+            value: 2467
+        }, {
+            name: '过会',
+            value: 2244
+        }, {
+            name: '康德',
+            value: 1898
+        }, {
+            name: 'IPO',
+            value: 1484
+        }, {
+            name: '爱奇艺',
+            value: 1112
+        }]
+    }]
+};
+        myChart.setOption(option);
+        window.onresize = function () {
+            myChart.resize(); //使第一个图表适应
+        }
+    </script>
+
+    
+</body>
+</html>

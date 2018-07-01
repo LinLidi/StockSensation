@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8"> 
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, user-scalable=no">
+   <title>股市舆情分析</title>
+   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+   <script src="../static/js/stockdata/echarts.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span> 股市舆情分析</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">个股历史交易行情</a></li>
+            <li><a href="/wordcloud">个股相关词云展示</a></li>
+            <li><a href="/dicopinion">情感字典舆情预测</a></li>
+            <li   class="active"><a href="/nbopinion">朴素贝叶斯舆情预测</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container"> 
+        <h3 class="text-primary text-center">朴素贝叶斯情感分析</h3>
+    </div>
+ 
+    <div class="container">
+      <div class="panel panel-primary">
+        <div class="panel-heading">个股情感倾向查询</div>
+          <div class="panel-body">
+            <p class="lead">输入完整的股票代码，支持字母和数字同时输入</p>
+            <form class="form-inline" action="/stockgraph/" role="form" method="get">
+                <div class="form-group">
+                  <label class="sr-only" for="Inputstock"></label>
+                  <input type="text" class="form-control" name="stocknum" id="gettext3" placeholder="输入股票代码"/>
+                </div>
+                <button type="submit" class="btn btn-primary">查询 <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+            </form>   
+        </div>
+      </div>
+    </div>
+
+    <div class="container"> 
+      <h5 class="text-primary">当前朴素贝叶斯模型的准确率为：0.882933076</h5>
+    </div>
+
+    <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">平安银行——基于情感字典舆情分析</div>
+      <div class="panel-body">
+                   <div class="col-md-12 col-xs-12">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div id="main" style="width:100%;height:400px;"></div>
+                </div>
+      </div>
+    </div>
+    </div>
+
+
+       <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        // 基于准备好的dom，初始化echarts实例
+        var posList = [
+    'left', 'right', 'top', 'bottom',
+    'inside',
+    'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+    'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+];
+
+        option = {
+            color: ['#191970', '#3fbf2b', '#e5323e', '#c0c0c0'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+            },
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                left: 'right',
+                top: 'center',
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {show: false},
+                    data: ['5月1日', '5月2日', '5月3日', '5月4日', '5月5日']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '中等立场',
+                    type: 'bar',
+                    barGap: 0,
+                    data: [46,79,65,39,76]
+                },
+                {
+                    name: '积极情绪',
+                    type: 'bar',
+                    data: [108,98,79,117,96]
+                },
+                {
+                    name: '消极情绪',
+                    type: 'bar',
+                    data: [47,20,39,89,28]
+                },
+                {
+                    name: '发帖总数',
+                    type: 'bar',
+                    data: [387,399,368,354,308]
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
