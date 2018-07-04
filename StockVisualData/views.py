@@ -129,26 +129,12 @@ def nbopinionResult(request):
         items = re.findall(pattern,content)
     return render(request,"nbopinionResult.html")
 
+#时间数组
 def setDate():
-    dateCount =[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
-    today = datetime.datetime.now()
-    t1m = today.month
-    t1d = today.day
-    dateCount[0][0] = t1m
-    dateCount[0][1] = t1d
-    t2 = datetime.datetime.today()-datetime.date.resolution*1
-    dateCount[1][0] = t2.month
-    dateCount[1][1] = t2.day
-    t3 = datetime.datetime.today()-datetime.date.resolution*2
-    dateCount[2][0] = t3.month
-    dateCount[2][1] = t3.day
-    t4 = datetime.datetime.today()-datetime.date.resolution*3
-    dateCount[3][0] = t4.month
-    dateCount[3][1] = t4.day
-    t5 = datetime.datetime.today()-datetime.date.resolution*4
-    dateCount[4][0] = t5.month
-    dateCount[4][1] = t5.day
-    
+    dateCount = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+    for i in range(5):
+        dateCount[i][0] = (datetime.datetime.today()-datetime.date.resolution * i).month
+        dateCount[i][1] = (datetime.datetime.today()-datetime.date.resolution * i).day
     return dateCount
 
 
