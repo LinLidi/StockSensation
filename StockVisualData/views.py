@@ -82,12 +82,8 @@ def dicopinion(request):
 def dicopinionResult(request):
     dicStockNum = request.GET['dicStockNum']
     dateCount = setDate()
-    url = 'http://guba.eastmoney.com/list,' + str(dicStockNum) + '.html'
-    stockRequest = urllib.request.urlopen(url)
-    htmlContent = str(stockRequest.read(),'utf-8')
-    namePattern = re.compile('<title>(.*?)股吧_(.*?)怎么样_分析讨论社区—东方财富网</title>',re.S)
-    gotName = re.findall(namePattern,htmlContent)
-    stockName = gotName[0][1]
+
+    stockName = getStockName(dicStockNum)
     
     for pageNum in range(1,21):
         urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+'_'+str(pageNum)+'.html'
@@ -129,13 +125,38 @@ def nbopinionResult(request):
         items = re.findall(pattern,content)
     return render(request,"nbopinionResult.html")
 
-#时间数组
+#设置时间数组
 def setDate():
     dateCount = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
     for i in range(5):
         dateCount[i][0] = (datetime.datetime.today()-datetime.date.resolution * i).month
         dateCount[i][1] = (datetime.datetime.today()-datetime.date.resolution * i).day
     return dateCount
+
+#获取股票名称
+def getStockName(stocknumber):
+    realtimeData = ts.get_realtime_quotes(stocknumber)
+    realtimeData = realtimeData.to_dict('record')
+    stockName = realtimeData[0]['name']
+    return stockName
+
+#获取分词List
+def getSegList(stocknumber):
+    segList = []
+    for pageNum in range(1, 21):
+        urlPage = 'http://guba.eastmoney.com/list,' + str(stocknumber) + '_' + str(pageNum) + '.html'
+        stockPageRequest = urllib.request.urlopen(urlPage)
+        htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
+        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        gotTitle = re.findall(titlePattern, htmlTitleContent)
+        print(len(gotTitle))
+        for i in range(len(gotTitle)):
+            for j in range(len(dateCount)):
+                if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
+                    segSentence = list(jieba.cut(gotTitle[i][1], cut_all=True))
+                    segList.append(segSentence)
+    return segList
+
 
 
 
