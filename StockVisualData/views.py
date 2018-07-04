@@ -82,7 +82,6 @@ def dicopinion(request):
 def dicopinionResult(request):
     dicStockNum = request.GET['dicStockNum']
     dateCount = setDate()
-
     stockName = getStockName(dicStockNum)
     
     for pageNum in range(1,21):
@@ -94,6 +93,7 @@ def dicopinionResult(request):
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
+                    dateCount[j][5] += 1
                     segTitle = gotTitle[i][1]
                     segList = list(jieba.cut(segTitle, cut_all=True))
                     for eachItem in segList:
@@ -127,7 +127,7 @@ def nbopinionResult(request):
 
 #设置时间数组
 def setDate():
-    dateCount = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+    dateCount = [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]
     for i in range(5):
         dateCount[i][0] = (datetime.datetime.today()-datetime.date.resolution * i).month
         dateCount[i][1] = (datetime.datetime.today()-datetime.date.resolution * i).day
