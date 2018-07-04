@@ -74,7 +74,7 @@
     'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
     ];
     option = {
-        color: ['green', 'yellow', 'red', 'gray'],
+        color: ['#191970', '#3fbf2b', '#e5323e', '#c0c0c0'],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -112,17 +112,16 @@
         ],
         series: [
             {
-                name: '积极情绪',
-                type: 'bar',
-                data: [dateCount[0][2],dateCount[1][2],dateCount[2][2],dateCount[3][2],dateCount[4][2]]
-            },
-            {
                 name: '中等立场',
                 type: 'bar',
                 barGap: 0,
                 data: [dateCount[0][4],dateCount[1][4],dateCount[2][4],dateCount[3][4],dateCount[4][4]]
             },
-
+            {
+                name: '积极情绪',
+                type: 'bar',
+                data: [dateCount[0][2],dateCount[1][2],dateCount[2][2],dateCount[3][2],dateCount[4][2]]
+            },
             {
                 name: '消极情绪',
                 type: 'bar',
@@ -131,7 +130,7 @@
             {
                 name: '发帖总数',
                 type: 'bar',
-                data: [dateCount[0][5],dateCount[1][5],dateCount[2][5],dateCount[3][5],dateCount[4][5]]
+                data: [total1,total2,total3,total4,total5]
             }
         ]
     };
