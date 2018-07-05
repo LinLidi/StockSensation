@@ -22,53 +22,35 @@ negativeWord = ['向下', '下跌', '跌', '跌停', '低迷', '顶', '顶部', 
 neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳', '过渡', '盘整']
 
 def home(request):
-    tf = ts.get_hist_data('sh000001')
-    df = ts.get_realtime_quotes('sh000001')
-    df = df.to_dict('record')
-    stockname = df[0]['name']
-    date = tf.index.tolist()
-    open = tf['open']
-    open = open.tolist()
-    close = tf['close']
-    close = close.tolist()
-    high = tf['high']
-    high = high.tolist()
-    low = tf['low']
-    low = low.tolist()
-    volume = tf['volume']
-    volume = volume.tolist()
-    dataMA5 = tf['ma5']
-    dataMA5 = dataMA5.tolist()
-    dataMA10 = tf['ma10']
-    dataMA10 = dataMA10.tolist()
-    dataMA20 = tf['ma20']
-    dataMA20 = dataMA20.tolist()
-    return render(request,'home.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stockname':json.dumps(stockname)})
+    stock_his_data = ts.get_hist_data('sh000001')
+    stock_name = getStockName('sh000001')
+
+    date = stock_his_data.index.tolist()
+    open = stock_his_data['open'].tolist()
+    close = stock_his_data['close'].tolist()
+    high = stock_his_data['high'].tolist()
+    low = stock_his_data['low'].tolist()
+    volume = stock_his_data['volume'].tolist()
+    dataMA5 = stock_his_data['ma5'].tolist()
+    dataMA10 = stock_his_data['ma10'].tolist()
+    dataMA20 = stock_his_data['ma20'].tolist()
+    return render(request,'home.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
 
 def stockKLine(request):
     stocknum = request.GET['stocknum']
-    tf = ts.get_hist_data(stocknum)
-    df = ts.get_realtime_quotes(stocknum)
-    df = df.to_dict('record')
-    stockname = df[0]['name']
-    date = tf.index.tolist()
-    open = tf['open']
-    open = open.tolist()
-    close = tf['close']
-    close = close.tolist()
-    high = tf['high']
-    high = high.tolist()
-    low = tf['low']
-    low = low.tolist()
-    volume = tf['volume']
-    volume = volume.tolist()
-    dataMA5 = tf['ma5']
-    dataMA5 = dataMA5.tolist()
-    dataMA10 = tf['ma10']
-    dataMA10 = dataMA10.tolist()
-    dataMA20 = tf['ma20']
-    dataMA20 = dataMA20.tolist()
-    return render(request,'stockKline.html',{'stockname':json.dumps(stockname),'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20)})
+    stock_his_data = ts.get_hist_data(stocknum)
+    stock_name = getStockName(stocknum)
+
+    date = stock_his_data.index.tolist()
+    open = stock_his_data['open'].tolist()
+    close = stock_his_data['close'].tolist()
+    high = stock_his_data['high'].tolist()
+    low = stock_his_data['low'].tolist()
+    volume = stock_his_data['volume'].tolist()
+    dataMA5 = stock_his_data['ma5'].tolist()
+    dataMA10 = stock_his_data['ma10'].tolist()
+    dataMA20 = stock_his_data['ma20'].tolist()
+    return render(request,'stockKline.html',{'stock_name':json.dumps(stock_name),'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20)})
 
 def wordcloud(request):
     return render(request,"wordcloud.html")
@@ -82,7 +64,7 @@ def dicopinion(request):
 def dicopinionResult(request):
     dicStockNum = request.GET['dicStockNum']
     dateCount = setDate()
-    stockName = getStockName(dicStockNum)
+    stock_name = getStockName(dicStockNum)
     
     for pageNum in range(1,21):
         urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+'_'+str(pageNum)+'.html'
@@ -107,7 +89,7 @@ def dicopinionResult(request):
                             elif eachItem in neutralWord:
                                 dateCount[j][4] += 1
     print(dateCount)
-    return render(request,'dicopinionResult.html',{'stockName':stockName,'dateCount':json.dumps(dateCount)})
+    return render(request,'dicopinionResult.html',{'stock_name':stock_name,'dateCount':json.dumps(dateCount)})
 
 def nbopinion(request):
     return render(request,"nbopinion.html")
@@ -137,8 +119,8 @@ def setDate():
 def getStockName(stocknumber):
     realtimeData = ts.get_realtime_quotes(stocknumber)
     realtimeData = realtimeData.to_dict('record')
-    stockName = realtimeData[0]['name']
-    return stockName
+    stock_name = realtimeData[0]['name']
+    return stock_name
 
 #获取分词List
 def getSegList(stocknumber):
