@@ -19,6 +19,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.externals import joblib
+import os
 
 # Create your views here.
 positiveWord = ['向上', '上涨', '涨', '涨停', '高涨', '底', '底部', '反击', '拉升', '加仓', '买入', '买', '看多', '多', '满仓', '杀入', '抄底', '绝地','反弹', '反转', '突破', '牛', '牛市', '利好', '盈利', '新高', '反弹', '增', '爆发', '升', '笑', '胜利', '逆袭', '热', '惊喜', '回暖','回调', '强']
@@ -82,8 +83,7 @@ def dicopinionResult(request):
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
                     dateCount[j][5] += 1
-                    segTitle = gotTitle[i][1]
-                    segList = list(jieba.cut(segTitle, cut_all=True))
+                    segList = list(jieba.cut(gotTitle[i][1], cut_all=True))
                     for eachItem in segList:
                         if eachItem != ' ':
                             if eachItem in positiveWord:
@@ -101,17 +101,41 @@ def nbopinion(request):
     return render(request,"nbopinion.html")
 
 def nbopinionResult(request):
-    stocknum = request.GET['stocknum']
-    url = 'http://guba.eastmoney.com/list,'+str(stocknum)+',f.html'
-    today = datetime.datetime.now()
-    t_month = today.month
-    t_day = today.day
-    for page_num in range(0,50):
-        requesturl = urllib.request.urlopen(url)
-        content = str(requesturl.read(),'utf-8')
-        pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-        items = re.findall(pattern,content)
-    return render(request,"nbopinionResult.html")
+    Nb_stock_number = request.GET['Nb_stock_number']
+    dateCount = setDate()
+    stock_name = get_stock_name(Nb_stock_number)
+    homedir = os.getcwd()
+
+    clf = joblib.load(homedir+'/StockVisualData/Clf.pkl')
+    vectorizer = joblib.load(homedir+'/StockVisualData/Vect')
+    transformer = joblib.load(homedir+'/StockVisualData/Tfidf')
+
+    text_predict = []
+    for pageNum in range(1,21):
+        urlPage = 'http://guba.eastmoney.com/list,'+str(Nb_stock_number)+'_'+str(pageNum)+'.html'
+        stockPageRequest = urllib.request.urlopen(urlPage)
+        htmlTitleContent = str(stockPageRequest.read(),'utf-8')
+        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
+        gotTitle = re.findall(titlePattern,htmlTitleContent)
+        for i in range(len(gotTitle)):
+            for j in range(len(dateCount)):
+                if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
+                    dateCount[j][5] += 1
+                    seg_list = list(jieba.cut(gotTitle[i][1], cut_all=True))
+                    seg_text = " ".join(seg_list)
+                    seg_text = np.array(seg_text)
+                    text_predict = vectorizer.transform(seg_text)
+                    new_tfidf = transformer.transform(text_predict)
+                    predicted = clf.predict(new_tfidf)
+                    if predicted == '积极':
+                        dateCount[j][2] += 1
+                        continue
+                    elif predicted == '消极':
+                        dateCount[j][3] += 1
+                        continue
+                    elif predicted == '中立':
+                        dateCount[j][4] += 1
+    return render(request,'nbopinionResult.html',{'stock_name':stock_name,'dateCount':json.dumps(dateCount)})
 
 # 设置时间数组
 def setDate():
@@ -156,7 +180,6 @@ def NB_create_model():
         pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
         itemstemp = re.findall(pattern,content)
         for i in range(0, len(itemstemp)):
-            seg_strte=[]
             seg_list = list(jieba.cut(itemstemp[i][1], cut_all=False))
             seg_str = " ".join(seg_list)
             text_list.append(seg_str)
