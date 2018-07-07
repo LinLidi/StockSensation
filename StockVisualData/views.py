@@ -145,7 +145,7 @@ def get_segList(stocknumber):
     return segList
 
 # 分类器构建和数据持久化
-def NB_predict():
+def NB_create_model():
     # 获取标题文本
     text_list = []
     for page_num in range(0, 5):
