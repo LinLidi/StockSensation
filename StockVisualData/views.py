@@ -110,7 +110,6 @@ def nbopinionResult(request):
     vectorizer = joblib.load(homedir+'/StockVisualData/Vect')
     transformer = joblib.load(homedir+'/StockVisualData/Tfidf')
 
-    text_predict = []
     for pageNum in range(1,21):
         urlPage = 'http://guba.eastmoney.com/list,'+str(Nb_stock_number)+'_'+str(pageNum)+'.html'
         stockPageRequest = urllib.request.urlopen(urlPage)
@@ -118,14 +117,16 @@ def nbopinionResult(request):
         titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
         gotTitle = re.findall(titlePattern,htmlTitleContent)
         for i in range(len(gotTitle)):
+            text_predict = []
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
                     dateCount[j][5] += 1
                     seg_list = list(jieba.cut(gotTitle[i][1], cut_all=True))
                     seg_text = " ".join(seg_list)
-                    seg_text = np.array(seg_text)
-                    text_predict = vectorizer.transform(seg_text)
-                    new_tfidf = transformer.transform(text_predict)
+                    text_predict.append(seg_text)
+                    text_predict = np.array(text_predict)
+                    text_frequency = vectorizer.transform(text_predict)
+                    new_tfidf = transformer.transform(text_frequency)
                     predicted = clf.predict(new_tfidf)
                     if predicted == '积极':
                         dateCount[j][2] += 1
