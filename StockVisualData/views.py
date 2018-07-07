@@ -15,6 +15,10 @@ import datetime
 import tushare as ts
 import lxml
 import bs4
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.externals import joblib
 
 # Create your views here.
 positiveWord = ['向上', '上涨', '涨', '涨停', '高涨', '底', '底部', '反击', '拉升', '加仓', '买入', '买', '看多', '多', '满仓', '杀入', '抄底', '绝地','反弹', '反转', '突破', '牛', '牛市', '利好', '盈利', '新高', '反弹', '增', '爆发', '升', '笑', '胜利', '逆袭', '热', '惊喜', '回暖','回调', '强']
@@ -109,7 +113,7 @@ def nbopinionResult(request):
         items = re.findall(pattern,content)
     return render(request,"nbopinionResult.html")
 
-#设置时间数组
+# 设置时间数组
 def setDate():
     dateCount = [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]
     for i in range(5):
@@ -117,14 +121,14 @@ def setDate():
         dateCount[i][1] = (datetime.datetime.today()-datetime.date.resolution * i).day
     return dateCount
 
-#获取股票名称
+# 获取股票名称
 def get_stock_name(stocknumber):
     realtimeData = ts.get_realtime_quotes(stocknumber)
     realtimeData = realtimeData.to_dict('record')
     stock_name = realtimeData[0]['name']
     return stock_name
 
-#获取分词List
+# 获取分词List
 def get_segList(stocknumber):
     segList = []
     for pageNum in range(1, 21):
@@ -133,13 +137,61 @@ def get_segList(stocknumber):
         htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
         titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
         gotTitle = re.findall(titlePattern, htmlTitleContent)
-        print(len(gotTitle))
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
                     segSentence = list(jieba.cut(gotTitle[i][1], cut_all=True))
                     segList.append(segSentence)
     return segList
+
+# 分类器构建和数据持久化
+def NB_predict():
+    # 获取标题文本
+    text_list = []
+    for page_num in range(0, 5):
+        # 页数可改
+        url = 'http://guba.eastmoney.com/list,gssz,f_' + str(page_num) + '.html'
+        request = urllib.request.urlopen(url)
+        content = str(request.read(),'utf-8')
+        pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
+        itemstemp = re.findall(pattern,content)
+        for i in range(0, len(itemstemp)):
+            seg_strte=[]
+            seg_list = list(jieba.cut(itemstemp[i][1], cut_all=False))
+            seg_str = " ".join(seg_list)
+            text_list.append(seg_str)
+    text_list = np.array(text_list)
+
+    # 标注文本特征
+    class_vec = [' ']*len(text_list)
+    for i in range(0,len(text_list)):
+        for pos in positiveWord:
+            if pos in text_list[i]:
+                class_vec[i] = '积极'
+        for neg in negativeWord:
+            if neg in text_list[i]:
+                class_vec[i] = '消极'
+        for neu in neutralWord:
+            if neu in text_list[i]:
+                class_vec[i] = '中立'
+        if class_vec[i] ==  ' ':
+            class_vec[i] = '无立场'
+
+    # 将文本中的词语转换为词频矩阵，矩阵元素a[i][j] 表示j词在i类文本下的词频
+    vectorizer = CountVectorizer()
+    # 该类会统计每个词语的tf-idf权值
+    transformer=TfidfTransformer()
+    # 第一个fit_transform是计算tf-idf，第二个fit_transform是将文本转为词频矩阵
+    tfidf=transformer.fit_transform(vectorizer.fit_transform(text_list))
+
+    # 构造分类器
+    clf = MultinomialNB()
+    clf.fit(tfidf,class_vec)
+
+    # 持久化保存
+    joblib.dump(clf,'Clf.pkl')
+    joblib.dump(vectorizer,'Vect')
+    joblib.dump(transformer,'Tf-Idf')
 
 
 
