@@ -36,7 +36,7 @@
 
     <div class="container">
     <div class="panel panel-info">
-      <div class="panel-heading">平安银行——基于情感字典舆情分析</div>
+      <div class="panel-heading">{{stock_name}}</div>
       <div class="panel-body">
                    <div class="col-md-12 col-xs-12">
                     <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
@@ -46,80 +46,87 @@
     </div>
     </div>
 
-       <script type="text/javascript">
-        var myChart = echarts.init(document.getElementById('main'));
-        // 基于准备好的dom，初始化echarts实例
-        var posList = [
+   <script type="text/javascript">
+    var dateCount = {{dateCount|safe}};
+
+    var day1 = String(dateCount[0][0])+'月'+String(dateCount[0][1])+'日';
+    var day2 = String(dateCount[1][0])+'月'+String(dateCount[1][1])+'日'
+    var day3 = String(dateCount[2][0])+'月'+String(dateCount[2][1])+'日'
+    var day4 = String(dateCount[3][0])+'月'+String(dateCount[3][1])+'日'
+    var day5 = String(dateCount[4][0])+'月'+String(dateCount[4][1])+'日'
+
+    var myChart = echarts.init(document.getElementById('main'));
+    // 基于准备好的dom，初始化echarts实例
+    var posList = [
     'left', 'right', 'top', 'bottom',
     'inside',
     'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
     'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
-];
-
-        option = {
-            color: ['#003366', '#006699', '#4cabce', '#e5323e'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
+    ];
+    option = {
+        color: ['#191970', '#3fbf2b', '#e5323e', '#c0c0c0'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: {show: false},
+                data: [day1, day2, day3, day4, day5]
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '积极情绪',
+                type: 'bar',
+                data: [dateCount[0][2],dateCount[1][2],dateCount[2][2],dateCount[3][2],dateCount[4][2]]
             },
-            legend: {
-                data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+            {
+                name: '中等立场',
+                type: 'bar',
+                barGap: 0,
+                data: [dateCount[0][4],dateCount[1][4],dateCount[2][4],dateCount[3][4],dateCount[4][4]]
             },
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                left: 'right',
-                top: 'center',
-                feature: {
-                    mark: {show: true},
-                    dataView: {show: true, readOnly: false},
-                    magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                }
+            {
+                name: '消极情绪',
+                type: 'bar',
+                data: [dateCount[0][3],dateCount[1][3],dateCount[2][3],dateCount[3][3],dateCount[4][3]]
             },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'category',
-                    axisTick: {show: false},
-                    data: ['5月1日', '5月2日', '5月3日', '5月4日', '5月5日']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '中等立场',
-                    type: 'bar',
-                    barGap: 0,
-                    data: [26,44,55,13,55]
-                },
-                {
-                    name: '积极情绪',
-                    type: 'bar',
-                    data: [124,112,99,140,109]
-                },
-                {
-                    name: '消极情绪',
-                    type: 'bar',
-                    data: [52,23,45,100,33]
-                },
-                {
-                    name: '发帖总数',
-                    type: 'bar',
-                    data: [387,399,368,354,308]
-                }
-            ]
-        };
-        // 使用刚指定的配置项和数据显示图表
-        myChart.setOption(option);
-    </script>
+            {
+                name: '发帖总数',
+                type: 'bar',
+                data: [dateCount[0][5],dateCount[1][5],dateCount[2][5],dateCount[3][5],dateCount[4][5]]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表
+    myChart.setOption(option);
+</script>
     <div class="container">
         <div class="col-md-12 col-xs-12">
             <a href="/" class="btn btn-default btn-block" role="button">返回首页</a>
