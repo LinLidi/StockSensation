@@ -87,8 +87,6 @@ def stockKLine(request):
                                 continue
                             elif eachItem in neutralWord:
                                 dateCount[j][4] += 1
-        
-        for i in range(len(gotTitle)):
             text_predict = []
             for j in range(len(nb_dateCount)):
                 if int(gotTitle[i][3]) == nb_dateCount[j][0] and int(gotTitle[i][4]) == nb_dateCount[j][1]:
