@@ -1,11 +1,10 @@
 # 股市舆情情感分类可视化系统
 
-last update 9,July,2018</br>
+Last update 9,July,2018</br>
 
-</br>
-> 此Web基于Django+Bootstrap+Echarts等框架，个股交易行情数据调用了Tushare接口。对于舆情文本数据采取先爬取东方财富网股吧论坛词语设置机器学习训练集，在此基础上运用scikit-learn机器学习朴素贝叶斯方法构建文本分类器。通过Django Web框架，将所得数据传递到前端经过Bootstrap渲染过的html，对数据使用Echarts进行图表可视化处理</br>
+> 此Web基于Django+Bootstrap+Echarts等框架，个股交易行情数据调用了Tushare接口。对于舆情文本数据采取先爬取东方财富网股吧论坛词语设置机器学习训练集，在此基础上运用scikit-learn机器学习朴素贝叶斯方法构建文本分类器。通过Django Web框架，将所得数据传递到前端经过Bootstrap渲染过的html，对数据使用Echarts进行图表可视化处理
 
-不足之处，交流学习欢迎联系我的邮箱</br>
+不足之处或交流学习欢迎联系我的邮箱</br>
 
 #### 目前的功能：
 
