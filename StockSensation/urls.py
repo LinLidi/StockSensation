@@ -24,6 +24,7 @@ from StockVisualData import views as StockVisualData_views
 urlpatterns = [
                path('admin/', admin.site.urls),
                url(r'^$', StockVisualData_views.home, name='home'),
+               url(r'^index/$', StockVisualData_views.index, name='index'),
                url(r'^stockKLine/$', StockVisualData_views.stockKLine, name='stockKline'),
                
                url(r'^wordcloud/$', StockVisualData_views.wordcloud, name='wordcloud'),
