@@ -55,7 +55,7 @@ ROOT_URLCONF = 'StockSensation.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/Users/linlidi/Documents/StockSensation/StockVisualData/templates'],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

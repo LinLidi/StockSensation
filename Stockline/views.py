@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
 def stockKLine(request):
     stocknum = request.GET['stocknum']
     stock_his_data = ts.get_hist_data(stocknum)
