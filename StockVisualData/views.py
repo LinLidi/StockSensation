@@ -159,16 +159,6 @@ def dicopinionResult(request):
                                 continue
                             elif eachItem in neutralWord:
                                 dateCount[j][4] += 1
-
-        url = 'http://guba.sina.com.cn/?s=bar&name='+str(dicStockNum)
-        url_request = urllib.request.urlopen(url)
-        html_content = str(url_request.read(),'utf-8')
-        title_pattern = re.compile('<a href="/?s=thread&amp;tid=(.*?)&amp;bid=477" target="_blank" class=" linkblack f14">(.*?)</a>')
-        get_title = re.findall(title_pattern.html_content)
-        for i in range(get_title):
-            print(title_pattern[i][1])
-        
-    print(dateCount)
     return render(request,'dicopinionResult.html',{'stock_name':stock_name,'dateCount':json.dumps(dateCount)})
 
 def nbopinion(request):
