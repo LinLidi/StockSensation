@@ -27,6 +27,8 @@ neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳',
 
 def index(request):
     return render(request,'index.html')
+def dash_index(request):
+    return render(request,'base_dash.html')
 def home(request):
     stock_his_data = ts.get_hist_data('sh000001')
     stock_name = get_stock_name('sh000001')
