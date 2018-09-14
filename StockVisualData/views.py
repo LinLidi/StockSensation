@@ -28,7 +28,20 @@ neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳',
 def index(request):
     return render(request,'index.html')
 def dash_index(request):
-    return render(request,'base_dash.html')
+    stock_his_data = ts.get_hist_data('sh000001')
+    stock_name = get_stock_name('sh000001')
+
+    date = stock_his_data.index.tolist()
+    open = stock_his_data['open'].tolist()
+    close = stock_his_data['close'].tolist()
+    high = stock_his_data['high'].tolist()
+    low = stock_his_data['low'].tolist()
+    volume = stock_his_data['volume'].tolist()
+    dataMA5 = stock_his_data['ma5'].tolist()
+    dataMA10 = stock_his_data['ma10'].tolist()
+    dataMA20 = stock_his_data['ma20'].tolist()
+    
+    return render(request,'base_dash.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
 def home(request):
     stock_his_data = ts.get_hist_data('sh000001')
     stock_name = get_stock_name('sh000001')
