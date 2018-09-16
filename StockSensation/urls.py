@@ -17,13 +17,14 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 from StockVisualData import views as StockVisualData_views
+from Stockline import views as Kline_views
 
 
 
 
 urlpatterns = [
        path('admin/', admin.site.urls),
-       path('home/',StockVisualData_views.dash_index),
+       path('home/',Kline_views.home),
        url(r'^$', StockVisualData_views.home, name='home'),
        url(r'^index/$', StockVisualData_views.index, name='index'),
        url(r'^stockKLine/$', StockVisualData_views.stockKLine, name='stockKline'),

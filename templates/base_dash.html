@@ -7,6 +7,7 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/dashboard.css" rel="stylesheet">
     <script src="/static/js/StockVisual/echarts.js"></script>
+    <script src="/static/js/vue.js"></script>
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -56,30 +57,41 @@
 
 
     <script type="text/javascript">
-        var stock_his_data_dic = JSON.parse({{stock_his_data_dic|safe}})
+        var stock_his_data = JSON.parse({{stock_his_data|safe}})
+        var date = []
+        var open = []
+        var close = []
+        var high = []
+        var low = []
+        var volumes = []
+        var dataMA5 = []
+        var dataMA10 = []
+        var dataMA20 = []
         var myChart = echarts.init(document.getElementById('main'));
-        // 基于准备好的dom，初始化echarts实例
-        var datet = {{date|safe}};
-        var opent = {{open|safe}}
-        var closet = {{close|safe}}
-        var hight = {{high|safe}}
-        var lowt = {{low|safe}}
-        var volumest = {{volume|safe}}
-        var dataMA5t = {{dataMA5|safe}}
-        var dataMA10t = {{dataMA10|safe}}
-        var dataMA20t = {{dataMA20|safe}}
-        var stockname = {{stock_name|safe}};
+        for(var key_date in stock_his_data){
+            date.unshift(key_date)
+            open.unshift(stock_his_data[key_date]['open'])
+            close.unshift(stock_his_data[key_date]['close'])
+            high.unshift(stock_his_data[key_date]['high'])
+            low.unshift(stock_his_data[key_date]['low'])
+            volumes.unshift(stock_his_data[key_date]['volume'])
+            dataMA5.unshift(stock_his_data[key_date]['ma5'])
+            dataMA10.unshift(stock_his_data[key_date]['ma10'])
+            dataMA20.unshift(stock_his_data[key_date]['ma20'])
+        }
+        var stockname = {{stock_name|safe}}
+        // var opent = {{open|safe}}
+        // var closet = {{close|safe}}
+        // var hight = {{high|safe}}
+        // var lowt = {{low|safe}}
+        // var volumest = {{volume|safe}}
+        // var dataMA5t = {{dataMA5|safe}}
+        // var dataMA10t = {{dataMA10|safe}}
+        // var dataMA20t = {{dataMA20|safe}}
+        // var stockname = {{stock_name|safe}};
 
         
-        var date = datet.reverse();
-        var open = opent.reverse();
-        var close = closet.reverse();
-        var high = hight.reverse();
-        var low = lowt.reverse();
-        var volumes = volumest.reverse();
-        var dataMA5 = dataMA5t.reverse();
-        var dataMA10 = dataMA10t.reverse();
-        var dataMA20 = dataMA20t.reverse();
+        
 
         var colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'];
         var labelFont = 'bold 12px Sans-serif';
