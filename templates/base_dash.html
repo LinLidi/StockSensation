@@ -56,7 +56,8 @@
 
 
     <script type="text/javascript">
-      var myChart = echarts.init(document.getElementById('main'));
+        var stock_his_data_dic = JSON.parse({{stock_his_data_dic|safe}})
+        var myChart = echarts.init(document.getElementById('main'));
         // 基于准备好的dom，初始化echarts实例
         var datet = {{date|safe}};
         var opent = {{open|safe}}

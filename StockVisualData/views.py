@@ -20,7 +20,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.externals import joblib
 import os
-
+import pprint
 positiveWord = ['向上', '上涨', '涨', '涨停', '高涨', '底', '底部', '反击', '拉升', '加仓', '买入', '买', '看多', '多', '满仓', '杀入', '抄底', '绝地','反弹', '反转', '突破', '牛', '牛市', '利好', '盈利', '新高', '反弹', '增', '爆发', '升', '笑', '胜利', '逆袭', '热', '惊喜', '回暖','回调', '强']
 negativeWord = ['向下', '下跌', '跌', '跌停', '低迷', '顶', '顶部', '空袭', '跳水', '减仓', '减持', '卖出', '卖', '空', '清仓', '暴跌', '亏', '阴跌','拖累', '利空', '考验', '新低', '跌破', '熊', '熊市', '套', '回撤', '垃圾', '哭', '退', '减', '重挫', '平仓', '破灭', '崩', '绿','韭菜', '悲催', '崩溃', '下滑', '拖累', '弱']
 neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳', '过渡', '盘整']
@@ -28,9 +28,13 @@ neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳',
 def index(request):
     return render(request,'index.html')
 def dash_index(request):
-    stock_his_data = ts.get_hist_data('sh000001')
-    stock_name = get_stock_name('sh000001')
+    stock_his_data = ts.get_hist_data('sz')
+    stock_name = get_stock_name('sz')
 
+    stock_his_data_dic = json.dumps(stock_his_data.to_json(orient='index'))
+    pprint.pprint(stock_his_data_dic)
+
+    print(type(stock_his_data_dic))
     date = stock_his_data.index.tolist()
     open = stock_his_data['open'].tolist()
     close = stock_his_data['close'].tolist()
@@ -41,7 +45,7 @@ def dash_index(request):
     dataMA10 = stock_his_data['ma10'].tolist()
     dataMA20 = stock_his_data['ma20'].tolist()
     
-    return render(request,'base_dash.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
+    return render(request,'base_dash.html',{'stock_his_data_dic':stock_his_data_dic,'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
 def home(request):
     stock_his_data = ts.get_hist_data('sh000001')
     stock_name = get_stock_name('sh000001')
