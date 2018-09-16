@@ -9,6 +9,7 @@
    <script src="../static/js/StockVisual/echarts.js"></script>
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="/static/js/bootstrap.min.js"></script>
+   <script src="/static/js/vue.js"></script>
 </head>
 <body>
 
@@ -57,7 +58,8 @@
     </div>
     </div>
 
-    <script type="text/javascript" >
+    <script type="text/javascript">
+        
         var myChart = echarts.init(document.getElementById('main'));
         // 基于准备好的dom，初始化echarts实例
         var datet = {{date|safe}}
@@ -70,7 +72,7 @@
         var dataMA10t = {{dataMA10|safe}}
         var dataMA20t = {{dataMA20|safe}}
         var stockname = {{stock_name|safe}};
-
+        
         
         var date = datet.reverse();
         var open = opent.reverse();
@@ -81,6 +83,15 @@
         var dataMA5 = dataMA5t.reverse();
         var dataMA10 = dataMA10t.reverse();
         var dataMA20 = dataMA20t.reverse();
+
+        var data ={
+            open_price: open,
+            close_price: close
+            
+        }
+        var vm = new Vue({
+            data: data
+        })
 
         var colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'];
         var labelFont = 'bold 12px Sans-serif';
