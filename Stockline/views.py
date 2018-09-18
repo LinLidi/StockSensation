@@ -8,8 +8,7 @@ import json
 #----------------------------- Necessary Methods -----------------------------#
 
 def get_stock_name(stock_code):
-    real_time_data = ts.get_realtime_quotes(stock_code)
-    real_time_data = real_time_data.to_dict('record')
+    real_time_data = ts.get_realtime_quotes(stock_code).to_dict('record')
     stock_name = real_time_data[0]['name']
     return stock_name
 
