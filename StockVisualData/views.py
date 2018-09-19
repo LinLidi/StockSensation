@@ -85,7 +85,11 @@ def curlmd5(src):
 def tx_npl(textstring):
     url = "https://api.ai.qq.com/fcgi-bin/nlp/nlp_textpolar"
     time_stamp=str(int(time.time()))
+    print(time_stamp)
     nonce_str = ''.join(random.sample(string.ascii_letters + string.digits, 10))
+    print(nonce_str)
+    print(len(time_stamp))
+    print(len(nonce_str))
     app_id = '2108662408'
     app_key = 'PtTGCcqQ659C9kIQ'
     params = {
@@ -93,7 +97,6 @@ def tx_npl(textstring):
             'text':textstring,
             'time_stamp': time_stamp,
             'nonce_str': nonce_str,
-            'sign': ''
     }
     sign_before = ''
     for key in sorted(params):
