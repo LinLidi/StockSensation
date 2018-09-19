@@ -84,9 +84,27 @@ def curlmd5(src):
 #         print('机器人：'+answer) 
 def tx_npl(textstring):
     url = "https://api.ai.qq.com/fcgi-bin/nlp/nlp_textpolar"
-    plus_item = plus_item.encode('utf-8')
-    payload = md5sign.get_params(plus_item)
-    r = requests.post(url,data=payload)
+    time_stamp=str(int(time.time()))
+    nonce_str = ''.join(random.sample(string.ascii_letters + string.digits, 10))
+    app_id = '2108662408'
+    app_key = 'PtTGCcqQ659C9kIQ'
+    params = {
+            'app_id': app_id,
+            'text':textstring,
+            'time_stamp': time_stamp,
+            'nonce_str': nonce_str,
+            'sign': ''
+    }
+    sign_before = ''
+    for key in sorted(params):
+        sign_before += '{}={}&'.format(key,quote(params[key], safe=''))
+    sign_before += 'app_key={}'.format(app_key)
+    sign = curlmd5(sign_before)
+    params['sign'] = sign
+    print(params['sign'])
+    # plus_item = plus_item.encode('utf-8')
+    # payload = md5sign.params
+    r = requests.post(url,data=params)
     return r.json()
 
 
@@ -219,7 +237,7 @@ def dicopinionResult(request):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
                     dateCount[j][5] += 1
                     segList = list(jieba.cut(gotTitle[i][1], cut_all=True))
-                    print(gotTitle[])
+                    print(tx_npl(gotTitle[i][1]))
                     for eachItem in segList:
                         if eachItem != ' ':
                             if eachItem in positiveWord:
