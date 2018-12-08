@@ -65,8 +65,6 @@ def tx_npl(textstring):
     r = requests.post(url,data=params)
     return r.json()
 
-
-
 def index(request):
     return render(request,'index.html')
 def dash_index(request):
@@ -184,8 +182,9 @@ def dicopinionResult(request):
     dateCount = setDate()
     stock_name = get_stock_name(dicStockNum)
     
-    for pageNum in range(1,21):
-        urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+'_'+str(pageNum)+'.html'
+    for pageNum in range(1,10):
+        urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+',f_'+str(pageNum)+'.html'
+        print(urlPage)
         stockPageRequest = urllib.request.urlopen(urlPage)
         htmlTitleContent = str(stockPageRequest.read(),'utf-8')
         titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
@@ -195,7 +194,7 @@ def dicopinionResult(request):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
                     dateCount[j][5] += 1
                     segList = list(jieba.cut(gotTitle[i][1], cut_all=True))
-                    print(tx_npl(gotTitle[i][1]))
+                    # print(tx_npl(gotTitle[i][1]))
                     for eachItem in segList:
                         if eachItem != ' ':
                             if eachItem in positiveWord:
