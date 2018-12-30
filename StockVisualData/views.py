@@ -31,6 +31,8 @@ import random
 import string
 from urllib.parse import quote
 import requests
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 # import md5sign
 
 def curlmd5(src):
@@ -184,11 +186,11 @@ def dicopinionResult(request):
     
     for pageNum in range(1,10):
         urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+',f_'+str(pageNum)+'.html'
-        print(urlPage)
         stockPageRequest = urllib.request.urlopen(urlPage)
         htmlTitleContent = str(stockPageRequest.read(),'utf-8')
         titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
         gotTitle = re.findall(titlePattern,htmlTitleContent)
+        print(type(gotTitle))
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
