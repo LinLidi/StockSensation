@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'StockVisualData',
-    'Stockline'
+    'Stockline',
+    'stock_dic_opinion'
 ]
 
 MIDDLEWARE = [

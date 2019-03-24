@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from StockVisualData import views as StockVisualData_views
 from Stockline import views as Kline_views
+from stock_dic_opinion import views as opinion_views
 
 
 
@@ -25,6 +26,7 @@ from Stockline import views as Kline_views
 urlpatterns = [
        path('admin/', admin.site.urls),
        path('home/',Kline_views.home),
+       path('pyecharts/',opinion_views.index),
        url(r'^$', StockVisualData_views.home, name='home'),
        url(r'^index/$', StockVisualData_views.index, name='index'),
        url(r'^stockKLine/$', StockVisualData_views.stockKLine, name='stockKline'),
