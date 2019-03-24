@@ -6,7 +6,7 @@ import string
 import random
 import time
 import hashlib
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 import math
 from django.shortcuts import render
 from django.shortcuts import render_to_response
