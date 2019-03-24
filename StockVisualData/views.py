@@ -1,4 +1,11 @@
 # coding:utf-8
+import ssl
+import requests
+from urllib.parse import quote
+import string
+import random
+import time
+import hashlib
 from __future__ import unicode_literals
 import math
 from django.shortcuts import render
@@ -21,54 +28,55 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.externals import joblib
 import os
 import pprint
-positiveWord = ['向上', '上涨', '涨', '涨停', '高涨', '底', '底部', '反击', '拉升', '加仓', '买入', '买', '看多', '多', '满仓', '杀入', '抄底', '绝地','反弹', '反转', '突破', '牛', '牛市', '利好', '盈利', '新高', '反弹', '增', '爆发', '升', '笑', '胜利', '逆袭', '热', '惊喜', '回暖','回调', '强']
-negativeWord = ['向下', '下跌', '跌', '跌停', '低迷', '顶', '顶部', '空袭', '跳水', '减仓', '减持', '卖出', '卖', '空', '清仓', '暴跌', '亏', '阴跌','拖累', '利空', '考验', '新低', '跌破', '熊', '熊市', '套', '回撤', '垃圾', '哭', '退', '减', '重挫', '平仓', '破灭', '崩', '绿','韭菜', '悲催', '崩溃', '下滑', '拖累', '弱']
+positiveWord = ['向上', '上涨', '涨', '涨停', '高涨', '底', '底部', '反击', '拉升', '加仓', '买入', '买', '看多', '多', '满仓', '杀入', '抄底', '绝地',
+                '反弹', '反转', '突破', '牛', '牛市', '利好', '盈利', '新高', '反弹', '增', '爆发', '升', '笑', '胜利', '逆袭', '热', '惊喜', '回暖', '回调', '强']
+negativeWord = ['向下', '下跌', '跌', '跌停', '低迷', '顶', '顶部', '空袭', '跳水', '减仓', '减持', '卖出', '卖', '空', '清仓', '暴跌', '亏', '阴跌', '拖累', '利空',
+                '考验', '新低', '跌破', '熊', '熊市', '套', '回撤', '垃圾', '哭', '退', '减', '重挫', '平仓', '破灭', '崩', '绿', '韭菜', '悲催', '崩溃', '下滑', '拖累', '弱']
 neutralWord = ['震荡', '休养', '休养生息', '谨慎', '观望', '平稳', '过渡', '盘整']
 
-import hashlib
-import time
-import random
-import string
-from urllib.parse import quote
-import requests
-import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 # import md5sign
+
 
 def curlmd5(src):
     m = hashlib.md5(src.encode('UTF-8'))
     return m.hexdigest().upper()
 
+
 def tx_npl(textstring):
     url = "https://api.ai.qq.com/fcgi-bin/nlp/nlp_textpolar"
-    time_stamp=str(int(time.time()))
+    time_stamp = str(int(time.time()))
     print(time_stamp)
-    nonce_str = ''.join(random.sample(string.ascii_letters + string.digits, 10))
+    nonce_str = ''.join(random.sample(
+        string.ascii_letters + string.digits, 10))
     print(nonce_str)
     print(len(time_stamp))
     print(len(nonce_str))
     app_id = '2108662408'
     app_key = 'PtTGCcqQ659C9kIQ'
     params = {
-            'app_id': app_id,
-            'text':textstring,
-            'time_stamp': time_stamp,
-            'nonce_str': nonce_str,
+        'app_id': app_id,
+        'text': textstring,
+        'time_stamp': time_stamp,
+        'nonce_str': nonce_str,
     }
     sign_before = ''
     for key in sorted(params):
-        sign_before += '{}={}&'.format(key,quote(params[key], safe=''))
+        sign_before += '{}={}&'.format(key, quote(params[key], safe=''))
     sign_before += 'app_key={}'.format(app_key)
     sign = curlmd5(sign_before)
     params['sign'] = sign
     print(params['sign'])
     # plus_item = plus_item.encode('utf-8')
     # payload = md5sign.params
-    r = requests.post(url,data=params)
+    r = requests.post(url, data=params)
     return r.json()
 
+
 def index(request):
-    return render(request,'index.html')
+    return render(request, 'index.html')
+
+
 def dash_index(request):
     stock_his_data = ts.get_hist_data('sz')
     stock_name = get_stock_name('sz')
@@ -86,8 +94,10 @@ def dash_index(request):
     dataMA5 = stock_his_data['ma5'].tolist()
     dataMA10 = stock_his_data['ma10'].tolist()
     dataMA20 = stock_his_data['ma20'].tolist()
-    
-    return render(request,'base_dash.html',{'stock_his_data_dic':stock_his_data_dic,'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
+
+    return render(request, 'base_dash.html', {'stock_his_data_dic': stock_his_data_dic, 'date': json.dumps(date), 'open': json.dumps(open), 'close': json.dumps(close), 'high': json.dumps(high), 'low': json.dumps(low), 'volume': json.dumps(volume), 'dataMA5': json.dumps(dataMA5), 'dataMA10': json.dumps(dataMA10), 'dataMA20': json.dumps(dataMA20), 'stock_name': json.dumps(stock_name)})
+
+
 def home(request):
     stock_his_data = ts.get_hist_data('sh000001')
     stock_name = get_stock_name('sh000001')
@@ -101,8 +111,9 @@ def home(request):
     dataMA5 = stock_his_data['ma5'].tolist()
     dataMA10 = stock_his_data['ma10'].tolist()
     dataMA20 = stock_his_data['ma20'].tolist()
-    
-    return render(request,'home.html',{'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'stock_name':json.dumps(stock_name)})
+
+    return render(request, 'home.html', {'date': json.dumps(date), 'open': json.dumps(open), 'close': json.dumps(close), 'high': json.dumps(high), 'low': json.dumps(low), 'volume': json.dumps(volume), 'dataMA5': json.dumps(dataMA5), 'dataMA10': json.dumps(dataMA10), 'dataMA20': json.dumps(dataMA20), 'stock_name': json.dumps(stock_name)})
+
 
 def stockKLine(request):
     stocknum = request.GET['stocknum']
@@ -125,14 +136,16 @@ def stockKLine(request):
 
     clf = joblib.load(homedir+'/StockVisualData/Clf.pkl')
     vectorizer = joblib.load(homedir+'/StockVisualData/Vect')
-    transformer = joblib.load(homedir+'/StockVisualData/Tfidf')   
+    transformer = joblib.load(homedir+'/StockVisualData/Tfidf')
 
-    for pageNum in range(1,21):
-        urlPage = 'http://guba.eastmoney.com/list,'+str(stocknum)+'_'+str(pageNum)+'.html'
+    for pageNum in range(1, 21):
+        urlPage = 'http://guba.eastmoney.com/list,' + \
+            str(stocknum)+'_'+str(pageNum)+'.html'
         stockPageRequest = urllib.request.urlopen(urlPage)
-        htmlTitleContent = str(stockPageRequest.read(),'utf-8')
-        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-        gotTitle = re.findall(titlePattern,htmlTitleContent)
+        htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
+        titlePattern = re.compile(
+            '<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        gotTitle = re.findall(titlePattern, htmlTitleContent)
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
                 if int(gotTitle[i][3]) == dateCount[j][0] and int(gotTitle[i][4]) == dateCount[j][1]:
@@ -168,28 +181,34 @@ def stockKLine(request):
                     elif predicted == '中立':
                         nb_dateCount[j][4] += 1
 
-    return render(request,'Stockkline/stockKline.html',{'stock_name':json.dumps(stock_name),'date':json.dumps(date),'open':json.dumps(open),'close':json.dumps(close),'high':json.dumps(high),'low':json.dumps(low),'volume':json.dumps(volume),'dataMA5':json.dumps(dataMA5),'dataMA10':json.dumps(dataMA10),'dataMA20':json.dumps(dataMA20),'dateCount':json.dumps(dateCount),'nb_dateCount':json.dumps(nb_dateCount)})
+    return render(request, 'Stockkline/stockKline.html', {'stock_name': json.dumps(stock_name), 'date': json.dumps(date), 'open': json.dumps(open), 'close': json.dumps(close), 'high': json.dumps(high), 'low': json.dumps(low), 'volume': json.dumps(volume), 'dataMA5': json.dumps(dataMA5), 'dataMA10': json.dumps(dataMA10), 'dataMA20': json.dumps(dataMA20), 'dateCount': json.dumps(dateCount), 'nb_dateCount': json.dumps(nb_dateCount)})
+
 
 def wordcloud(request):
-    return render(request,"wordcloud.html")
+    return render(request, "wordcloud.html")
+
 
 def wordcloudResult(request):
-    return render(request,"wordcloudResult.html")
+    return render(request, "wordcloudResult.html")
+
 
 def dicopinion(request):
-    return render(request,"dicopinion.html")
+    return render(request, "dicopinion.html")
+
 
 def dicopinionResult(request):
     dicStockNum = request.GET['dicStockNum']
     dateCount = setDate()
     stock_name = get_stock_name(dicStockNum)
-    
-    for pageNum in range(1,10):
-        urlPage = 'http://guba.eastmoney.com/list,'+str(dicStockNum)+',f_'+str(pageNum)+'.html'
+
+    for pageNum in range(1, 10):
+        urlPage = 'http://guba.eastmoney.com/list,' + \
+            str(dicStockNum)+',f_'+str(pageNum)+'.html'
         stockPageRequest = urllib.request.urlopen(urlPage)
-        htmlTitleContent = str(stockPageRequest.read(),'utf-8')
-        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-        gotTitle = re.findall(titlePattern,htmlTitleContent)
+        htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
+        titlePattern = re.compile(
+            '<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        gotTitle = re.findall(titlePattern, htmlTitleContent)
         print(type(gotTitle))
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
@@ -207,10 +226,12 @@ def dicopinionResult(request):
                                 continue
                             elif eachItem in neutralWord:
                                 dateCount[j][4] += 1
-    return render(request,'dicopinionResult.html',{'stock_name':stock_name,'dateCount':json.dumps(dateCount)})
+    return render(request, 'dicopinionResult.html', {'stock_name': stock_name, 'dateCount': json.dumps(dateCount)})
+
 
 def nbopinion(request):
-    return render(request,"nbopinion.html")
+    return render(request, "nbopinion.html")
+
 
 def nbopinionResult(request):
     Nb_stock_number = request.GET['Nb_stock_number']
@@ -222,12 +243,14 @@ def nbopinionResult(request):
     vectorizer = joblib.load(homedir+'/StockVisualData/Vect')
     transformer = joblib.load(homedir+'/StockVisualData/Tfidf')
 
-    for pageNum in range(1,21):
-        urlPage = 'http://guba.eastmoney.com/list,'+str(Nb_stock_number)+'_'+str(pageNum)+'.html'
+    for pageNum in range(1, 21):
+        urlPage = 'http://guba.eastmoney.com/list,' + \
+            str(Nb_stock_number)+'_'+str(pageNum)+'.html'
         stockPageRequest = urllib.request.urlopen(urlPage)
-        htmlTitleContent = str(stockPageRequest.read(),'utf-8')
-        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-        gotTitle = re.findall(titlePattern,htmlTitleContent)
+        htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
+        titlePattern = re.compile(
+            '<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        gotTitle = re.findall(titlePattern, htmlTitleContent)
         for i in range(len(gotTitle)):
             text_predict = []
             for j in range(len(dateCount)):
@@ -248,17 +271,24 @@ def nbopinionResult(request):
                         continue
                     elif predicted == '中立':
                         dateCount[j][4] += 1
-    return render(request,'nbopinionResult.html',{'stock_name':stock_name,'dateCount':json.dumps(dateCount)})
+    return render(request, 'nbopinionResult.html', {'stock_name': stock_name, 'dateCount': json.dumps(dateCount)})
 
 # 设置时间数组
+
+
 def setDate():
-    dateCount = [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]
+    dateCount = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [
+        0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
     for i in range(5):
-        dateCount[i][0] = (datetime.datetime.today()-datetime.date.resolution * i).month
-        dateCount[i][1] = (datetime.datetime.today()-datetime.date.resolution * i).day
+        dateCount[i][0] = (datetime.datetime.today() -
+                           datetime.date.resolution * i).month
+        dateCount[i][1] = (datetime.datetime.today() -
+                           datetime.date.resolution * i).day
     return dateCount
 
 # 获取股票名称
+
+
 def get_stock_name(stocknumber):
     realtimeData = ts.get_realtime_quotes(stocknumber)
     realtimeData = realtimeData.to_dict('record')
@@ -266,13 +296,17 @@ def get_stock_name(stocknumber):
     return stock_name
 
 # 获取分词List
+
+
 def get_segList(stocknumber):
     segList = []
     for pageNum in range(1, 21):
-        urlPage = 'http://guba.eastmoney.com/list,' + str(stocknumber) + '_' + str(pageNum) + '.html'
+        urlPage = 'http://guba.eastmoney.com/list,' + \
+            str(stocknumber) + '_' + str(pageNum) + '.html'
         stockPageRequest = urllib.request.urlopen(urlPage)
         htmlTitleContent = str(stockPageRequest.read(), 'utf-8')
-        titlePattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        titlePattern = re.compile(
+            '<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
         gotTitle = re.findall(titlePattern, htmlTitleContent)
         for i in range(len(gotTitle)):
             for j in range(len(dateCount)):
@@ -282,16 +316,20 @@ def get_segList(stocknumber):
     return segList
 
 # 分类器构建和数据持久化
+
+
 def NB_create_model():
     # 获取标题文本
     text_list = []
     for page_num in range(0, 5):
         # 页数可改
-        url = 'http://guba.eastmoney.com/list,gssz,f_' + str(page_num) + '.html'
+        url = 'http://guba.eastmoney.com/list,gssz,f_' + \
+            str(page_num) + '.html'
         request = urllib.request.urlopen(url)
-        content = str(request.read(),'utf-8')
-        pattern = re.compile('<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>',re.S)
-        itemstemp = re.findall(pattern,content)
+        content = str(request.read(), 'utf-8')
+        pattern = re.compile(
+            '<span class="l3">(.*?)title="(.*?)"(.*?)<span class="l6">(\d\d)-(\d\d)</span>', re.S)
+        itemstemp = re.findall(pattern, content)
         for i in range(0, len(itemstemp)):
             seg_list = list(jieba.cut(itemstemp[i][1], cut_all=False))
             seg_str = " ".join(seg_list)
@@ -300,7 +338,7 @@ def NB_create_model():
 
     # 标注文本特征
     class_vec = [' ']*len(text_list)
-    for i in range(0,len(text_list)):
+    for i in range(0, len(text_list)):
         for pos in positiveWord:
             if pos in text_list[i]:
                 class_vec[i] = '积极'
@@ -310,25 +348,21 @@ def NB_create_model():
         for neu in neutralWord:
             if neu in text_list[i]:
                 class_vec[i] = '中立'
-        if class_vec[i] ==  ' ':
+        if class_vec[i] == ' ':
             class_vec[i] = '无立场'
 
     # 将文本中的词语转换为词频矩阵，矩阵元素a[i][j] 表示j词在i类文本下的词频
     vectorizer = CountVectorizer()
     # 该类会统计每个词语的tf-idf权值
-    transformer=TfidfTransformer()
+    transformer = TfidfTransformer()
     # 第一个fit_transform是计算tf-idf，第二个fit_transform是将文本转为词频矩阵
-    tfidf=transformer.fit_transform(vectorizer.fit_transform(text_list))
+    tfidf = transformer.fit_transform(vectorizer.fit_transform(text_list))
 
     # 构造分类器
     clf = MultinomialNB()
-    clf.fit(tfidf,class_vec)
+    clf.fit(tfidf, class_vec)
 
     # 持久化保存
-    joblib.dump(clf,'Clf.pkl')
-    joblib.dump(vectorizer,'Vect')
-    joblib.dump(transformer,'Tf-Idf')
-
-
-
-
+    joblib.dump(clf, 'Clf.pkl')
+    joblib.dump(vectorizer, 'Vect')
+    joblib.dump(transformer, 'Tf-Idf')

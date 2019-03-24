@@ -3,8 +3,6 @@ import pandas as pd
 import tushare as ts
 import json
 
-
-
 #----------------------------- Necessary Methods -----------------------------#
 
 def get_stock_name(stock_code):
